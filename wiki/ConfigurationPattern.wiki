@@ -36,3 +36,30 @@ This way, the only thing you need to get the configuration is to call:
 {{{
 MyConfig config = MyConfig.Get()
 }}}
+
+= Localized configuration =
+
+If you want to localize your configurations, the only thing you need is to move the tags you want to a *localized for* tag.
+
+{{{
+<myConfig>
+  <someInt>42</someInt>
+  <someString>forty-two</someString>
+
+  <localized for="WhateverLand">
+    <someString>forty-one-plus-one</someString>
+  </localized>
+
+  <localized for="Brazil">
+    <someString>quarenta-e-dois</someString>
+  </localized>
+</myConfig>
+}}}
+
+You don't have to modify your code. But you may question "how can the configuration pattern know which is the location I want?".
+
+You can define it in two ways. The first is explicitly tell which location you want to load.
+{{{
+MyConfig config = MyConfig.Get("Brazil");
+}}}
+
