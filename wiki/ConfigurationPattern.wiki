@@ -1,6 +1,5 @@
 #summary Customized localized configuration description
 
-
 = Introduction =
 
 Simple.NET implements it's own configuration system. Relying on XML standard, the framework provides a elegant way to write configuration definitions. All the configuration is automatically localizable. You don't have even to explicitly tell to configuration manager which location you want.
@@ -16,7 +15,7 @@ Suppose it's need to store a string and an integer inside a XML file. The XML st
 </myConfig>
 }}}
 
-Then, to handle this in an OO model, all you should do is to create a configuration class that extends ConfigElement, or ConfigRoot.
+Then, to handle this in an OO model, all you should do is to create a configuration class that extends `ConfigElement`, or `ConfigRoot<T>`.
 
 In this case, this class should look like:
 
@@ -67,7 +66,7 @@ But you can also do this more generically, creating a Localization Provider.
 
 == Localization Providers ==
 
-A localization provider is a class that implements ILocalizationProvider interface.
+A localization provider is a class that implements `ILocalizationProvider` interface.
 {{{
 public interface ILocalizationProvider
 {
@@ -75,15 +74,15 @@ public interface ILocalizationProvider
 }
 }}}
 
-Simple.NET comes with two default implementations: NopLocalizationProvider and ThreadCultureLocalizationProvider. Very intuitive.
+Simple.NET comes with two default implementations: `NopLocalizationProvider` and `ThreadCultureLocalizationProvider`. Very intuitive.
 
 You can also define your own Localization Provider.
 
 === How to use a Localization Provider ===
 
-In order to use a provider, you must decorate either the calling method, class or assembly with LocalizationProviderAttribute. Then, all ConfigRoot.Get() calls will try to query the localization in the defined class.
+In order to use a provider, you must decorate either the calling method, class or assembly with `LocalizationProviderAttribute`. Then, all `ConfigRoot.Get()` calls will try to query the localization in the defined class.
 
-For example, if in AssemblyInfo.cs file, inside Properties folder of the project, there is a line:
+For example, if in `AssemblyInfo.cs` file, inside Properties folder of the project, there is a line:
 {{{
 [assembly: LocalizationProvider(typeof(ThreadCultureLocalizationProvider))]
 }}}
@@ -97,15 +96,118 @@ class Program
     {
 }}}
 
-Then, all calls inside this class will use NopLocalizationProvider. And so on.
+Then, all calls inside this class will use `NopLocalizationProvider`. And so on.
 
 The configuration provider tries to get the localization provider in the following order, using the first defined.
 
-# in the calling method
-# in the calling class
-# in the calling assembly
+  # in the calling method
+  # in the calling class
+  # in the calling assembly
 
-_Note: if a method is decorated with LocalizationProviderIgnoreAttribute, then it'll be skipped in this search_
+_Note: if a method is decorated with `LocalizationProviderIgnoreAttribute`, then it'll be skipped in this search_
 
+= Supported Types =
 
+Simple.NET supports many system types, and also allows the developer to define its own types. By default, the supported types are:
 
+  * All classes and structs that implements `IConvertible` interface. (int, string, double, etc.)
+  * `Nullable<T>`, for all T : `IConvertible`
+  * Enumerations 
+  * Any class that implements `IList<T>`, for all T that can be handled
+  * Any class that implements `IDictionary<K,V>`, for all K : `IConvertible` and V that can be handled
+  * Byte arrays (that must be stored as Base64 in XML files)
+  * Complex types (i.e., any class that extends ConfigElement)
+
+= Real sample =
+
+XML:
+{{{
+<?xml version="1.0" encoding="utf-8" ?>
+<simpleLibrary>
+  <business>
+    <interfaceAssembly>Sample.BusinessInterface</interfaceAssembly>
+    <serverAssembly>Sample.BusinessServer</serverAssembly>
+  </business>
+  <serviceModel>
+    <defaultBaseAddress>http://localhost:9001/</defaultBaseAddress>
+    <serviceConfigurator type="SimpleLibrary.ServiceModel.SingletonServiceConfigurator, SimpleLibraryBase"/>
+    <serviceConfigurator type="SimpleLibrary.ServiceModel.ErrorBehaviorServiceConfigurator, SimpleLibraryBase"/>
+    <serviceConfigurator type="SimpleLibrary.ServiceModel.DebugServiceConfigurator, SimpleLibraryBase" enabled="true"/>
+    <serviceConfigurator type="SimpleLibrary.ServiceModel.MetadataBehaviorServiceConfigurator, SimpleLibraryBase">
+      <address>mex</address>
+      <httpGetEnabled>true</httpGetEnabled>
+    </serviceConfigurator>
+
+    <defaultEndpoint>
+      <bindingNameRef>_DefaultBinding</bindingNameRef>
+      <bindingType>System.ServiceModel.WSHttpBinding, System.ServiceModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</bindingType>
+      <address></address>
+
+      <endpointConfigurator type="SimpleLibrary.ServiceModel.DataContractConfigurator, SimpleLibraryBase"/>
+      <endpointConfigurator type="SimpleLibrary.ServiceModel.DefaultFaultsConfigurator, SimpleLibraryBase"/>
+    </defaultEndpoint>
+
+    <additionalEndpoints/>
+  </serviceModel>
+  <dataConfig>
+    <nhibernateConfigFile>NHibernate.config</nhibernateConfigFile>
+  </dataConfig>
+</simpleLibrary>
+}}}
+
+Classes:
+
+{{{
+[DefaultFile("SimpleLibrary.config", false)]
+public class SimpleLibraryConfig : ConfigRoot<SimpleLibraryConfig>
+{
+    [ConfigElement("business", Required = true)]
+    public BusinessElement Business { get; set; }
+
+    [ConfigElement("serviceModel", Required = true)]
+    public ServiceModelElement ServiceModel { get; set; }
+
+    [ConfigElement("dataConfig", Default = InstanceType.New)]
+    public DataConfigElement DataConfig { get; set; }
+}
+
+public class BusinessElement : ConfigElement
+{
+    [ConfigElement("interfaceAssembly", Required = true)]
+    public string InterfaceAssembly { get; set; }
+
+    [ConfigElement("serverAssembly", Required = true)]
+    public string ServerAssembly { get; set; }
+}
+
+public class ConfiguratorElement : PlainXmlConfigElement
+{
+    [ConfigElement("type", Required = true)]
+    public string Type { get; set; }
+
+    [ConfigElement("runOnlyAtServer", Default = false)]
+    public bool RunOnlyAtServer { get; set; }
+}
+
+public class DataConfigElement : ConfigElement
+{
+    [ConfigElement("nhibernateConfigFile", Default = "NHibernate.config")]
+    public string NHibernateConfigFile { get; set; }
+}
+
+public class ServiceModelElement : ConfigElement
+{
+    [ConfigElement("defaultEndpoint", Required = true)]
+    public EndpointElement DefaultEndpoint { get; set; }
+
+    [ConfigElement("endpoint")]
+    [ConfigAcceptsParent("additionalEndpoints")]
+    public List<EndpointElement> Endpoints { get; set; }
+
+    [ConfigElement("serviceConfigurator")]
+    public List<ConfiguratorElement> ServiceConfigurators { get; set; }
+
+    [ConfigElement("defaultBaseAddress", Required = true)]
+    public string DefaultBaseAddress { get; set; }
+}
+}}}
