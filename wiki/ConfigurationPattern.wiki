@@ -1,4 +1,4 @@
-#test
+#summary Customized localized configuration description
 
 
 = Introduction =
