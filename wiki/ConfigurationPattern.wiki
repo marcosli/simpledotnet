@@ -38,7 +38,7 @@ MyConfig config = MyConfig.Get()
 }}}
 
 = Localized configuration =
-
+== How? ==
 If you want to localize your configurations, the only thing you need is to move the tags you want to a *localized for* tag.
 
 {{{
@@ -63,3 +63,6 @@ You can define it in two ways. The first is explicitly tell which location you w
 MyConfig config = MyConfig.Get("Brazil");
 }}}
 
+But you can also do this more generically, creating a Localization Provider.
+
+== Localization Providers ==
