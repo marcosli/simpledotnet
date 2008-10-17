@@ -1,0 +1,16 @@
+#Customized configuration pattern description
+
+= Introduction =
+
+Simple.NET implements it's own configuration system. Relying on XML standard, the framework provides a elegant way to write configuration definitions. All the configuration is automatically localizable. You don't have even to explicitly tell to configuration manager which location you want.
+
+= Sample =
+
+Suppose it's need to store a string and an integer inside a XML file. The XML structure will look like this:
+
+{{{
+<myConfig>
+  <someInt>42</someInt>
+  <someString>forty-two</someString>
+</myConfig>
+}}}
