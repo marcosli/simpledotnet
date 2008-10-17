@@ -66,3 +66,46 @@ MyConfig config = MyConfig.Get("Brazil");
 But you can also do this more generically, creating a Localization Provider.
 
 == Localization Providers ==
+
+A localization provider is a class that implements ILocalizationProvider interface.
+{{{
+public interface ILocalizationProvider
+{
+    string GetLocalization(Type type);
+}
+}}}
+
+Simple.NET comes with two default implementations: NopLocalizationProvider and ThreadCultureLocalizationProvider. Very intuitive.
+
+You can also define your own Localization Provider.
+
+=== How to use a Localization Provider ===
+
+In order to use a provider, you must decorate either the calling method, class or assembly with LocalizationProviderAttribute. Then, all ConfigRoot.Get() calls will try to query the localization in the defined class.
+
+For example, if in AssemblyInfo.cs file, inside Properties folder of the project, there is a line:
+{{{
+[assembly: LocalizationProvider(typeof(ThreadCultureLocalizationProvider))]
+}}}
+
+The current thread culture will be the default localization provider for config calls. But, if in a class inside this assembly, it is decorated this way:
+{{{
+[LocalizationProvider(typeof(NopLocalizationProvider))]
+class Program
+{
+    static void Main(string[] args)
+    {
+}}}
+
+Then, all calls inside this class will use NopLocalizationProvider. And so on.
+
+The configuration provider tries to get the localization provider in the following order, using the first defined.
+
+# in the calling method
+# in the calling class
+# in the calling assembly
+
+_Note: if a method is decorated with LocalizationProviderIgnoreAttribute, then it'll be skipped in this search_
+
+
+
