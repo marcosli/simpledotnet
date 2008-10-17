@@ -9,24 +9,20 @@ Simple.NET implements it's own configuration system. Relying on XML standard, th
 
 Suppose it's need to store a string and an integer inside a XML file. The XML structure will look like this:
 
-{{{
-<myConfig>
+{{{<myConfig>
   <someInt>42</someInt>
   <someString>forty-two</someString>
-</myConfig>
-}}}
+</myConfig>}}}
 
 Then, to handle this in an OO model, all you should do is to create a configuration class that extends ConfigElement, or ConfigRoot<T>.
 
 In this case, this class should look like:
 
-{{{
-public class MyConfig : ConfigRoot<MyConfig>
+{{{public class MyConfig : ConfigRoot<MyConfig>
 {
     [ConfigElement("someInt", Required=true)]
     public int SomeInt { get; set; }
 
     [ConfigElement("someString", Default="someDefaultValue")]
     public string SomeString { get; set; }
-}
-}}}
+}}}}
