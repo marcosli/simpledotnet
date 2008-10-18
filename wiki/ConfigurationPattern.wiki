@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Simple.NET implements it's own configuration system. Relying on XML standard, the framework provides a elegant way to write configuration definitions. All the configuration is automatically localizable. You don't have even to explicitly tell to configuration manager which location you want.
+Simple.NET implements its own configuration system. Relying on XML standard, the framework provides a elegant way to write configuration definitions. All the configuration is automatically localizable. You don't have even to explicitly tell to configuration manager which location you want.
 
 = Sample =
 
@@ -105,6 +105,42 @@ The configuration provider tries to get the localization provider in the followi
   # in the calling assembly
 
 _Note: if a method is decorated with `LocalizationProviderIgnoreAttribute`, then it'll be skipped in this search_
+
+= Complex objects =
+
+XML is hierarhycal. This configuration pattern is also.
+
+There are basically three types that uses XML hierarchy: complex elements, lists, dictionaries.
+
+== Complex elements ==
+
+In XML you can write:
+{{{
+<element>
+  <childElement>
+    <childChildElement/>
+  </childElement>
+</element>
+}}}
+
+Simple.NET considers any class that extends ConfigElement as a complex type. So, to map the XML above, the class should be:
+
+{{{
+public class ChildElement : ConfigElement {
+    [ConfigElement("childChildElement")]
+    public string ChildChild { get; set; }
+}
+
+public class Element : ConfigElement {
+    [ConfigElement("childElement")]
+    public ChildElement Child { get; set; }
+}
+}}}
+
+== Lists ==
+
+To use a List inside configuration, all you should do is to include a property with type implementing `IList<T>` interface. The simplest way is to
+
 
 = Supported Types =
 
