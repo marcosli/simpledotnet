@@ -188,7 +188,30 @@ public class ConfigurationSample : ConfigElement
 
 == Dictionaries ==
 
-TODO
+Dicionaries are pretty much the same as lists, but with a keyed record. The key must be of an `IConvertible` type.
+
+XML:
+{{{
+<testDictionary>
+  <item customKey="test1">Test1</item>
+  <item customKey="test2">Test2</item>
+  <item customKey="test3">Test3</item>
+  <item customKey="test4">Test4</item>
+  <item customKey="test5">Test5</item>
+</testDictionary>
+}}}
+
+Classes:
+{{{
+public class TestDictionary : ConfigElement 
+{
+    [ConfigElement("item")]
+    [ConfigDictionaryKeyName("customKey")]
+    public Dictionary<string, string> Items { get; set; } 
+}
+}}}
+
+_Note: `ConfigAcceptsParentAttribute` works with dictionaries also._
 
 = Supported Types =
 
