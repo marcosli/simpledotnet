@@ -188,7 +188,7 @@ public class ConfigurationSample : ConfigElement
 
 == Dictionaries ==
 
-Dicionaries are pretty much the same as lists, but with a keyed record. The key must be of an `IConvertible` type.
+Dicionaries are pretty much the same as lists, but inheriting from `IDictionary<K,V>` with a keyed record. The key must be of an `IConvertible` type.
 
 XML:
 {{{
