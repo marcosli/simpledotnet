@@ -2,11 +2,11 @@
 
 = Introduction =
 
-Simple.NET implements its own configuration system. Relying on XML standard, the framework provides a elegant way to write configuration definitions. All the configuration is automatically localizable. You don't have even to explicitly tell to configuration manager which location you want.
+Simple.NET implements its own configuration system. Relying on XML standard, the framework provides an elegant way to write configuration definitions. All the configuration is automatically localizable. You don't have even to explicitly tell to configuration manager which location you want.
 
 = Sample =
 
-Suppose it's need to store a string and an integer inside a XML file. The XML structure will look like this:
+Suppose it's needed to store a string and an integer inside a XML file. The XML structure will look like this:
 
 {{{
 <myConfig>
@@ -123,15 +123,17 @@ In XML you can write:
 </element>
 }}}
 
-Simple.NET considers any class that extends ConfigElement as a complex type. So, to map the XML above, the class should be:
+Simple.NET considers any class that extends `ConfigElement` as a complex type. So, to map the XML above, the class should be:
 
 {{{
-public class ChildElement : ConfigElement {
+public class ChildElement : ConfigElement 
+{
     [ConfigElement("childChildElement")]
     public string ChildChild { get; set; }
 }
 
-public class Element : ConfigElement {
+public class Element : ConfigElement 
+{
     [ConfigElement("childElement")]
     public ChildElement Child { get; set; }
 }
@@ -139,8 +141,54 @@ public class Element : ConfigElement {
 
 == Lists ==
 
-To use a List inside configuration, all you should do is to include a property with type implementing `IList<T>` interface. The simplest way is to
+To use a List inside configuration, all you should do is to include a property with type implementing `IList<T>` interface. The simplest way is to do this is using the `List<T>` implementation.
 
+XML:
+{{{
+<testList>
+  <item>Test1</item>
+  <item>Test2</item>
+  <item>Test3</item>
+  <item>Test4</item>
+</testList>
+}}}
+
+Classes:
+{{{
+public class TestList : ConfigElement 
+{
+    [ConfigElement("item")]
+    public List<string> Items { get; set }
+}
+}}}
+
+Another option is to define an accepted parent tag. Altough it's not recomended, it may be very useful in simple config files.
+
+XML:
+{{{
+<configurationSample>
+  <testList>
+    <item>Test1</item>
+    <item>Test2</item>
+    <item>Test3</item>
+    <item>Test4</item>
+  </testList>
+</configurationSample>
+}}}
+
+Classes
+{{{
+public class ConfigurationSample : ConfigElement
+{
+    [ConfigElement("item")]
+    [ConfigAcceptsParent("testList")]
+    public List<string> Items { get; set; }
+}
+}}}
+
+== Dictionaries ==
+
+TODO
 
 = Supported Types =
 
