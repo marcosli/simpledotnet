@@ -95,4 +95,4 @@ MainController.Run(Assembly.GetExecutingAssembly());
 </hibernate-configuration>
 }}}
 
-*That's ok. Now you project should be able to run. Remember to run either `UserInterface` and `BusinessServer` projects.
+*That's ok. Now you project should be able to run. Remember to run either `UserInterface` and `BusinessServer` projects.*
