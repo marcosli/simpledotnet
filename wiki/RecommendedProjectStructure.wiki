@@ -1,0 +1,22 @@
+#The best practices when creating a project with Simple.NET
+
+=Introduction=
+
+Simple.NET has been built to be as less invasive as possible. But some practices are recommended. Firstly, we'll try to explain what is needed. And, after that, what is recommended.
+
+= What is needed =
+
+_Note: for information about Simple.NET assemblies, consult [LibraryAssemblies]_
+
+== Three layers ==
+
+Every Simple.NET solution must have at least three logical layers. In practice, they can be at the same project or not, your guess. Follows the description of each layer.
+
+=== BusinessInterface ===
+
+_*This layer must reference:*_
+  * _SimpleLibraryCore assembly_
+
+This layer define contracts, either data contracts or business contracts. This layer defines e uncouples the interface from the implementation itself. It should contain two components.
+
+==== Domain ====
