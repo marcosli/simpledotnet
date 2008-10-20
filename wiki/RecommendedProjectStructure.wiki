@@ -12,11 +12,56 @@ _Note: for information about Simple.NET assemblies, consult [LibraryAssemblies]_
 
 Every Simple.NET solution must have at least three logical layers. In practice, they can be at the same project or not, your guess. Follows the description of each layer.
 
-=== BusinessInterface ===
+=== !BusinessInterface ===
 
 _*This layer must reference:*_
-  * _[LibraryAssemblies SimpleLibraryCore] assembly_
+  * _[LibraryAssemblies#SimpleLibraryCore SimpleLibraryCore] assembly_
 
 This layer define contracts, either data contracts or business contracts. This layer defines e uncouples the interface from the implementation itself. It should contain two components.
 
-==== Domain ====
+==== Business Domain ====
+
+Defines all the business entities. Note that one business entity doesn't need to be related to a database table. There can be an entity, for example, that maps to a query result. All entities must be decorated with DataContractAttribute, and all non-calculated properties must be decorated with DataMemberAttribute. NHibernate also requires that all properties are virtual.
+
+eg:
+{{{
+[DataContract(Name="Employee", Namespace="BusinessInterface.Domain")]
+public class Employee
+{
+    [DataMember]
+    public virtual int Id { get; set; }
+    public static PropertyName IdProperty = "Id";
+
+    [DataMember]
+    public virtual string Name { get; set; }
+    public static PropertyName NameProperty = "Name";
+
+    [DataMember]
+    public virtual byte[] Version { get; set; }
+    public static PropertyName VersionProperty = "Version";
+}
+}}}
+
+All the `public static PropertyName` are optional, but it's highly recommended, to make the following syntax possible:
+
+{{{
+Filter filter = Employee.NameProperty.Eq("John Doe");
+}}}
+
+Believe. It's very handy.
+
+==== Business Contracts ===
+
+All the interfaces that defines business rules. Usually, they're interfaces that inherits from `IBaseRules<T>` where T is an entity. But it's not required. An interface must only be decorated with ServiceContractAttribute and MainContractAttribute, and all the interface members must be decorated with OperationContractAttribute.
+
+{{{
+[ServiceContract]
+[MainContract]
+public interface IEmployerRules : IBaseRules<Employer>
+{
+    [OperationContract]
+    void GetAllEmployersWithSomeCondition();
+}
+}}}
+
+===!BusinessServer===
