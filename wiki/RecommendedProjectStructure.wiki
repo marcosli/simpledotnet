@@ -1,4 +1,5 @@
 #summary The best practices when creating a project with Simple.NET
+#labels Featured,Phase-Implementation
 
 =Introduction=
 
@@ -71,6 +72,25 @@ _*This layer must reference:*_
   * _[#BusinessInterface BusinessInterface] assembly_
 
 This layer must contain all business logic, including the data access. Most of the base methods (either rules and data access) are already implemented. It's just a matter of extending some classes.
+
+===NHibernate mappings===
+
+Inside this assembly, you must also create all NHibernate mapping files. You can do this many ways, but the most recommended is creating the .hbm.xml files as Embedded Resources to the project.
+
+A sample follows:
+{{{
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Sample.BusinessInterface.Domain.Employer,Sample.BusinessInterface" table="tb_employer" lazy="false" optimistic-lock="version" dynamic-update="true" >
+    <id name="Id" column="id_employer" type="int">
+      <generator class="native"/>
+    </id>
+    <version name="Version" column="version" type="SimpleLibrary.DataAccess.TimestampType,SimpleLibrary" generated="always" unsaved-value="null"/>
+    <property type="string" length="120" name="Name" column="name" />
+  </class>
+</hibernate-mapping>
+}}}
+
+You can find great support on NHibernate community about how to create hbm files. More information about in http://www.hibernate.org
 
 ===!DataAccess===
 
