@@ -1,0 +1,24 @@
+#summary Little explanation about each Assembly in Simple.NET
+
+=BasicLibrary=
+
+_*References explicitly: log4net, System.ServiceModel*_
+
+
+This assembly contains all the basic functionalities not related to business modelling nor service hosting. It contains, for example, the configuration pattern implementation and database locking mechanism.
+
+=SimpleLibraryCore=
+
+_*References explicitly: BasicLibrary, System.ServiceModel*_
+
+In this assembly, all the common functionalities are defined. business rules base interfaces. Configurations, WCF base clases and etc.
+
+=SimpleLibraryServer=
+
+_*References explicitly: BasicLibrary, log4net, System.ServiceModel, NHibernate, NHibernate.Linq, Castle.DynamicProxy2, Castle.Core*_
+
+This assembly is the specific part of Simple.NET to work within the BusinessServer. It provide base classes for DataAccess with NHibernate.
+
+=SimpleLibraryTests=
+
+This assembly is intended to contain base tests for every project.
