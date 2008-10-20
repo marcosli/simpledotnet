@@ -42,7 +42,7 @@ public class Employee
 }
 }}}
 
-All the `public static PropertyName` are optional, but it's highly recommended, to make the following syntax possible:
+All the `public static PropertyName` are optional, but they're highly recommended, to make the following syntax possible:
 
 {{{
 Filter filter = Employee.NameProperty.Eq("John Doe");
@@ -65,3 +65,8 @@ public interface IEmployerRules : IBaseRules<Employer>
 }}}
 
 ===!BusinessServer===
+
+_*This layer must reference:*_
+  * _[LibraryAssemblies#SimpleLibraryCore SimpleLibraryCore] assembly_
+  * _[LibraryAssemblies#SimpleLibraryServer SimpleLibraryServer] assembly_
+  * _[#BusinessInterface BusinessInterface] assembly_
