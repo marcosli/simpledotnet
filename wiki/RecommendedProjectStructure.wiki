@@ -25,8 +25,8 @@ Defines all the business entities. Note that one business entity doesn't need to
 
 eg:
 {{{
-[DataContract(Name="Employee", Namespace="BusinessInterface.Domain")]
-public class Employee
+[DataContract(Name="Employer", Namespace="BusinessInterface.Domain")]
+public class Employer
 {
     [DataMember]
     public virtual int Id { get; set; }
@@ -45,7 +45,7 @@ public class Employee
 All the `public static PropertyName` are optional, but they're highly recommended, to make the following syntax possible:
 
 {{{
-Filter filter = Employee.NameProperty.Eq("John Doe");
+Filter filter = Employer.NameProperty.Eq("Google");
 }}}
 
 Believe. It's very handy.
@@ -60,7 +60,7 @@ All the interfaces that defines business rules. Usually, they're interfaces that
 public interface IEmployerRules : IBaseRules<Employer>
 {
     [OperationContract]
-    void GetAllEmployersWithSomeCondition();
+    IList<Employer> GetAllEmployersWithSomeCondition();
 }
 }}}
 
@@ -70,3 +70,54 @@ _*This layer must reference:*_
   * _[LibraryAssemblies#SimpleLibraryCore SimpleLibraryCore] assembly_
   * _[LibraryAssemblies#SimpleLibraryServer SimpleLibraryServer] assembly_
   * _[#BusinessInterface BusinessInterface] assembly_
+
+This layer must contain all business logic, including the data access. Most of the base methods (either rules and data access) are already implemented. It's just a matter of extending some classes.
+
+====!DataAccess====
+
+There is no requirement on !DataAccess layer, but, often will be the best option to use `BaseDao<T>` class.
+
+Doing that, can be useful implement the three main constructors of !BaseDao class. A sample follows:
+
+{{{
+public class EmployerDao : BaseDao<Employer>
+{
+    public EmployerDao () : base() { }
+    public EmployerDao (ISession session) : base(session) { }
+    public EmployerDao (BaseDao previousDao) : base(previousDao) { }
+}
+}}}
+
+`BaseDao<T>` already have `ISession` instance, needed by NHibernate. This way, it's possible to get data in three main ways:
+
+{{{
+IQuery query = Session.CreateQuery("select e From Employer e"); //HQL Query
+ISQLQuery sqlQuery = Session.CreateSQLQuery("select * from tb_employer"); //SQL Query
+ICriteria criteria = Session.CreateCriteria(typeof(Employer)); //Crieria Query
+}}}
+
+All of them return data using `List<T>()` or `UniqueResult<T>()` methods.
+
+_Note: when using ISQLQuery, you can define how the results will be transformed into entities using IResultTransformer instances. NHibernate provides simples transformers, but Simple.NET also offers two useful transformers. They're `TupleToPropertiesTransformer` and `TupleToConstructorTransformer`. They can be instantiated by using `SimpleTransformers.ByProperties<T>()` or `SimpleTransformers.ByConstructor<T>()` method._
+
+====Rules====
+
+Basically, for each business contract in [#BusinessInterface BusinessInterface] assembly, you must create a class that implements that contract. Note that if a contract extends `IBaseRules<T>`, you can make the implementing class to extend `BaseRules<T,D>` class, where T is entity type and D is the corresponding base data access class.
+
+{{{
+public class EmployerRules : BaseRules<Employer, EmployerDao>, IEmployerRules
+{
+    public virtual IList<Employer> GetAllEmployersWithSomeCondition() 
+    {
+        EmployerDao dao = GetDao();
+        Filter filter = Employer.NameProperty.Eq("Google");
+        return dao.ListByCriteria(CreateCriteriaByFilter(filter, OrderBy.Asc(Employer.IdProperty));
+    }
+}
+}}}
+
+Above sample is valid.
+
+_Note: ALL methods inside a business rule MUST be virtual, in order to create a valid proxy. Note as well that it won't cause errors until you call the non-virtual methods._
+
+
