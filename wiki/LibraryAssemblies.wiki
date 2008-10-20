@@ -1,6 +1,6 @@
 #summary Little explanation about each Assembly in Simple.NET
 
-=BasicLibrary=
+=!BasicLibrary=
 
 _*References explicitly: log4net, System.ServiceModel*_
 
