@@ -1,4 +1,4 @@
-#The best practices when creating a project with Simple.NET
+#summary The best practices when creating a project with Simple.NET
 
 =Introduction=
 
@@ -15,7 +15,7 @@ Every Simple.NET solution must have at least three logical layers. In practice, 
 === BusinessInterface ===
 
 _*This layer must reference:*_
-  * _SimpleLibraryCore assembly_
+  * _[LibraryAssemblies SimpleLibraryCore] assembly_
 
 This layer define contracts, either data contracts or business contracts. This layer defines e uncouples the interface from the implementation itself. It should contain two components.
 
