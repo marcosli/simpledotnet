@@ -1,5 +1,5 @@
 #summary How to create your first project with Simple.NET
-#labels Featured,Phase-Implementation,Phase-Support
+#labels Phase-Implementation,Phase-Support
 
 = Introduction =
 
