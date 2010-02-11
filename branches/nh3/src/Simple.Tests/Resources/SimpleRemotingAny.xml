@@ -1,0 +1,3 @@
+<remoting>
+	<baseAddress>%%URL%%</baseAddress>
+</remoting>

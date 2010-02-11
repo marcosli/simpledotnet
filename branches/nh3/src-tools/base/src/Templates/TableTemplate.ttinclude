@@ -1,0 +1,49 @@
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Globalization" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ include file="..\Templates\Inflector.ttinclude" #>
+<#+
+	public abstract class TableTemplate : Template
+	{
+        public DbTable Table { get; set; }
+    	public string AssemblyName { get; set; }
+        public GeneratedTextTransformation Context { get; set; }
+		public string OutputFileTemplate { get; set; }
+		
+		public void RefreshOutputFile() 
+		{
+			this.OutputFile = OutputFileTemplate.Replace("%s", GetTableClassName());
+		}
+		
+		public string GetTableClassName() 
+		{
+			return GetTableClassName(Table.TableName);
+	    }
+		
+	    public string GetTableClassName(string table) {
+			return Inflector.MakeSingular(Utilities.CleanUp(table));
+	    }
+    
+    
+  	    public string GetFieldType(DbColumn column) {
+			return column.GetDisplayTypeName(column.IsKey);
+	    }
+
+	    public string GetFieldName(DbColumn column) {
+			return Utilities.CleanUp(column.ColumnName);
+	    }
+	    
+	    
+	    public string GetFieldType(DbForeignKey fk) {
+			return GetTableClassName(fk.Columns[0].PkTableName);
+	    }
+	    
+	    public string GetFieldName(DbForeignKey fk) {
+			if (fk.Columns.Count == 1) 
+				return Utilities.CleanUp(Utilities.ReplaceId(fk.Columns[0].FkColumnName));
+			else
+				return GetTableClassName(fk.Columns[0].PkTableName);
+			
+	    }
+	}
+#>
