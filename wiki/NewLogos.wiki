@@ -1,0 +1,9 @@
+#summary A page containg the new logs for Simple.Net
+
+<img src="http://simpledotnet.googlecode.com/svn/trunk/gfx/Icon64.png"/>
+<img src="http://simpledotnet.googlecode.com/svn/trunk/gfx/Icon100.png"/>
+<img src="http://simpledotnet.googlecode.com/svn/trunk/gfx/Icon256.png"/>
+
+<img src="http://simpledotnet.googlecode.com/svn/trunk/gfx/Logo150.png"/>
+<img src="http://simpledotnet.googlecode.com/svn/trunk/gfx/Logo250.png"/>
+<img src="http://simpledotnet.googlecode.com/svn/trunk/gfx/Logo350.png"/>
