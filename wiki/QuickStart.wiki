@@ -1,0 +1,7 @@
+#summary How to start your first Simple.Net project
+
+= Download it =
+
+Simple.Net bundles an (almost) one-click installer that allows you to get started in one click. To download it, access [http://code.google.com/p/simpledotnet/downloads/list this page], and select the latest project starter available.
+
+http://simpledotnet.googlecode.com/svn/wiki/QuickStart1.png
