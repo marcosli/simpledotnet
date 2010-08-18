@@ -5,3 +5,15 @@
 Simple.Net bundles an (almost) one-click installer that allows you to get started in one click. To download it, access [http://code.google.com/p/simpledotnet/downloads/list this page], and select the latest project starter available.
 
 http://simpledotnet.googlecode.com/svn/wiki/QuickStart1.png
+
+= Start it =
+
+Start the program you just downloaded. Enter the project namespace you want, and click Ok.
+
+http://simpledotnet.googlecode.com/svn/wiki/QuickStart2.png
+
+When finished, you should click "Start".
+
+http://simpledotnet.googlecode.com/svn/wiki/QuickStart3.png
+
+=
