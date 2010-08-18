@@ -12,8 +12,6 @@ Start the program you just downloaded. Enter the project namespace you want, and
 
 http://simpledotnet.googlecode.com/svn/wiki/QuickStart2.png
 
-When finished, you should click "Start".
+= Use it =
 
-http://simpledotnet.googlecode.com/svn/wiki/QuickStart3.png
-
-=
+Now you have a Simple.Net project. Any further actions are described at [CreatingYourFirstEntity]
