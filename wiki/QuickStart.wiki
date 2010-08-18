@@ -14,4 +14,8 @@ http://simpledotnet.googlecode.com/svn/wiki/QuickStart2.png
 
 = Use it =
 
-Now you have a Simple.Net project. Any further actions are described at [CreatingYourFirstEntity]
+Now you have a Simple.Net project.
+
+http://simpledotnet.googlecode.com/svn/wiki/QuickStart3.png
+
+Any further actions are described at [CreatingYourFirstEntity]
